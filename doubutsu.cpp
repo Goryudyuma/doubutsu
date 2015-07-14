@@ -104,25 +104,104 @@ int main ()
 			for (int k = 0; k < 3; k++) {
 				vector<vector<vector<ll>>> now_boards(8,now_board);
 				bool f[8]={};
+				bool g[8]={};
 				switch(now_board[j][k]){
-					case 6:{
+					case 6:{//ひよこ
 							   if(j+1<4){
 								   if(now_board[j+1][k]<=5){
-									   now_boards[0][j+1][k]=6;
+									   now_boards[0][j+1][k]=now_board[j][k];
 									   now_boards[0][j][k]=0;
 									   f[0]=1;
 									   if(now_board[j+1][k]!=0){
-										   now_boards[0][4][now_board[j+1][k]-1]++;
+										   if(now_board[j+1][k]==5){
+											   g[0]=1;
+										   }else{
+											   now_boards[0][4][now_board[j+1][k]-1]++;
+										   }
 									   }
 									   if(j+1==3){
 										   now_boards[1]=now_board;
 										   now_boards[1][j+1][k]=7;
 										   f[1]=1;
+										   if(g[0]){
+											   g[1]=1;
+										   }
 									   }
 								   }
 							   }
 							   break;
 						   };
+					case 10:{//ライオン
+								if(j-1>=0&&k+1<3){
+									if(now_board[j-1][k+1]<=5){
+										now_boards[0][j-1][k+1]=now_board[j][k];
+										now_boards[0][j][k]=0;
+										f[0]=1;
+										if(now_board[j-1][k+1]!=0){
+											if(now_board[j-1][k+1]==5){
+												g[0]=1;
+											}else{
+												now_boards[0][4][now_board[j+1][k]-1]++;
+											}
+										}
+									}
+								}
+								if(j-1>=0&&k-1>=0){
+									if(now_board[j-1][k-1]<=5){
+										now_boards[1][j-1][k-1]=now_board[j][k];
+										now_boards[1][j][k]=0;
+										f[1]=1;
+										if(now_board[j-1][k-1]!=0){
+											if(now_board[j-1][k-1]==5){
+												g[1]=1;
+											}else{
+												now_boards[1][4][now_board[j+1][k]-1]++;
+											}
+										}
+									}
+								}
+							};
+					case 7:{//にわとり
+							   if(j+1<4&&k+1<3){
+
+							   }
+							   if(j+1<4&&k-1>=0){
+
+							   }
+						   };
+					case 9:{//キリン
+							   if(j+1<4){
+
+							   }
+							   if(j-1>=0){
+
+							   }
+							   if(k+1<3){
+
+							   }
+							   if(k-1>=0){
+
+							   }
+							   break;
+						   };
+					case 8:{//ぞう
+							   if(j-1>=0&&k+1<3){
+
+							   }
+							   if(j-1>=0&&k-1>=0){
+
+							   }
+							   if(j+1<4&&k+1<3){
+
+							   }
+							   if(j+1<4&&k-1>=0){
+
+							   }
+							   break;
+						   };
+					case 0:{//持ち駒を打つ
+						   
+						   }
 				};
 				for (int l = 0; l < 8; l++) {
 					if(f[l]){
@@ -137,6 +216,5 @@ int main ()
 				}	
 			}
 		}
-
 	}
 }
