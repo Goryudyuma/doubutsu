@@ -141,7 +141,7 @@ int main ()
 											if(now_board[j-1][k+1]==5){
 												g[0]=1;
 											}else{
-												now_boards[0][4][now_board[j+1][k]-1]++;
+												now_boards[0][4][now_board[j-1][k+1]-1]++;
 											}
 										}
 									}
@@ -155,7 +155,7 @@ int main ()
 											if(now_board[j-1][k-1]==5){
 												g[1]=1;
 											}else{
-												now_boards[1][4][now_board[j+1][k]-1]++;
+												now_boards[1][4][now_board[j-1][k-1]-1]++;
 											}
 										}
 									}
@@ -163,6 +163,18 @@ int main ()
 							};
 					case 7:{//にわとり
 							   if(j+1<4&&k+1<3){
+									if(now_board[j+1][k+1]<=5){
+										now_boards[2][j+1][k+1]=now_board[j][k];
+										now_boards[2][j][k]=0;
+										f[2]=1;
+										if(now_board[j+1][k+1]!=0){
+											if(now_board[j+1][k+1]==5){
+												g[2]=1;
+											}else{
+												now_boards[2][4][now_board[j+1][k+1]-1]++;
+											}
+										}
+									}
 
 							   }
 							   if(j+1<4&&k-1>=0){
