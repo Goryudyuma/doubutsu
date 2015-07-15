@@ -75,6 +75,25 @@ ll reverse(ll in){
 	return min(out,memo);
 }
 
+void move(vector<vector<ll>>&original,vector<vector<ll>>&next_board,bool &f,bool &g,
+		ll nowx,ll nowy,ll nextx,ll nexty){
+	if(nextx>=0&&nextx<4&&nexty>=0&&nexty<3){
+		if(original[nextx][nexty]<=5){
+			next_board[nextx][nexty]=original[nowx][nowy];
+			next_board[nowx][nowy]=0;
+			f=1;
+			if(original[nextx][nexty]!=0){
+				if(original[nextx][nexty]==5){
+					g=1;
+				}else{
+					next_board[4][original[nextx][nexty]==6?0:original[nextx][nexty]-7]++;
+				}
+			}
+		}
+	}
+}
+
+
 int main ()
 {
 	vector<ll>data;
@@ -88,10 +107,9 @@ int main ()
 	for (i = 0; i < data.size(); i++) {
 		ll now=data[i];
 		vector<vector<ll>> now_board(5,vector<ll>(3));
-		now_board[4][0]=now/(1L<<8L)%(1L<<6L);
-		now_board[4][1]=now/(1L<<10L)%(1L<<8L);
-		now_board[4][2]=now/(1L<<12L)%(1L<<10L);
-
+		now_board[4][0]=(now/(1L<<6))%(1L<<2);
+		now_board[4][1]=(now/(1L<<8))%(1L<<2);
+		now_board[4][2]=(now/(1L<<10))%(1L<<2);
 		for (int j = 3; j >= 0; j--) {
 			for (int k = 2; k >=0 ; k--) {
 				now_board[j][k]=((now%(1L<<((j*3L+k+1L)*4L+12L)))/(1L<<((j*3L+k)*4L+12L)));
@@ -99,7 +117,6 @@ int main ()
 			}
 			cout<<endl;
 		}
-
 		for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 3; k++) {
 				vector<vector<vector<ll>>> now_boards(8,now_board);
@@ -132,96 +149,61 @@ int main ()
 							   break;
 						   };
 					case 10:{//ライオン
-								if(j-1>=0&&k+1<3){
-									if(now_board[j-1][k+1]<=5){
-										now_boards[0][j-1][k+1]=now_board[j][k];
-										now_boards[0][j][k]=0;
-										f[0]=1;
-										if(now_board[j-1][k+1]!=0){
-											if(now_board[j-1][k+1]==5){
-												g[0]=1;
-											}else{
-												now_boards[0][4][now_board[j-1][k+1]-1]++;
-											}
-										}
-									}
-								}
-								if(j-1>=0&&k-1>=0){
-									if(now_board[j-1][k-1]<=5){
-										now_boards[1][j-1][k-1]=now_board[j][k];
-										now_boards[1][j][k]=0;
-										f[1]=1;
-										if(now_board[j-1][k-1]!=0){
-											if(now_board[j-1][k-1]==5){
-												g[1]=1;
-											}else{
-												now_boards[1][4][now_board[j-1][k-1]-1]++;
-											}
-										}
-									}
-								}
+								move(now_board,now_boards[0],f[0],g[0],j,k,j-1,k+1);
+								move(now_board,now_boards[1],f[1],g[1],j,k,j-1,k-1);
 							};
 					case 7:{//にわとり
-							   if(j+1<4&&k+1<3){
-									if(now_board[j+1][k+1]<=5){
-										now_boards[2][j+1][k+1]=now_board[j][k];
-										now_boards[2][j][k]=0;
-										f[2]=1;
-										if(now_board[j+1][k+1]!=0){
-											if(now_board[j+1][k+1]==5){
-												g[2]=1;
-											}else{
-												now_boards[2][4][now_board[j+1][k+1]-1]++;
-											}
-										}
-									}
-
-							   }
-							   if(j+1<4&&k-1>=0){
-
-							   }
+							   move(now_board,now_boards[2],f[2],g[2],j,k,j+1,k+1);
+							   move(now_board,now_boards[3],f[3],g[3],j,k,j+1,k-1);
 						   };
 					case 9:{//キリン
-							   if(j+1<4){
-
-							   }
-							   if(j-1>=0){
-
-							   }
-							   if(k+1<3){
-
-							   }
-							   if(k-1>=0){
-
-							   }
+							   move(now_board,now_boards[4],f[4],g[4],j,k,j+1,k);
+							   move(now_board,now_boards[5],f[5],g[5],j,k,j-1,k);
+							   move(now_board,now_boards[6],f[6],g[6],j,k,j,k+1);
+							   move(now_board,now_boards[7],f[7],g[7],j,k,j,k-1);
 							   break;
 						   };
 					case 8:{//ぞう
-							   if(j-1>=0&&k+1<3){
-
-							   }
-							   if(j-1>=0&&k-1>=0){
-
-							   }
-							   if(j+1<4&&k+1<3){
-
-							   }
-							   if(j+1<4&&k-1>=0){
-
-							   }
+							   move(now_board,now_boards[0],f[0],g[0],j,k,j-1,k+1);
+							   move(now_board,now_boards[1],f[1],g[1],j,k,j-1,k-1);
+							   move(now_board,now_boards[2],f[2],g[2],j,k,j+1,k+1);
+							   move(now_board,now_boards[3],f[3],g[3],j,k,j+1,k-1);
 							   break;
 						   };
 					case 0:{//持ち駒を打つ
-						   
-						   }
+							   for (int m = 0; m < 3; m++) {
+								   if(now_board[4][m]){
+									   if(m==0){
+										   now_boards[m][j][k]=6;
+										   f[m]=1;
+										   now_boards[m][4][m]--;
+									   }
+									   if(m==1){
+										   now_boards[m][j][k]=8;
+										   f[m]=1;
+										   now_boards[m][4][m]--;
+									   }
+									   if(m==2){
+										   now_boards[m][j][k]=9;
+										   f[m]=1;
+										   now_boards[m][4][m]--;
+									   }
+								   }
+							   }
+							   break;
+						   };
 				};
 				for (int l = 0; l < 8; l++) {
 					if(f[l]){
+						cout<<endl;
 						for (int m = 3; m >= 0; m--) {
 							for (int n = 2; n >=0 ; n--) {
-								cout<<to_bin_str(now_boards[l][m][n])<<"  ";
+								cout<< setfill(' ')<<setw(5)<<right<<to_bin_str(now_boards[l][m][n])<<"  ";
 							}
 							cout<<endl;
+						}
+						for (int m = 0; m < 3; m++) {
+							cout<<now_boards[l][4][m]<<"  ";
 						}
 						cout<<endl;
 					}
