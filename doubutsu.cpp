@@ -93,6 +93,18 @@ void move(vector<vector<ll>>&original,vector<vector<ll>>&next_board,bool &f,bool
 	}
 }
 
+ll vec_to_bit(vector<vector<ll>>vec,ll now){
+	ll ret=now%(1L<<6);
+	for (int j = 3 ; j >= 0; j--) {
+		for (int k = 2; k >= 0; k--) {
+			ret+=vec[j][k]*(1L<<((j*3L+k)*4L+12L));
+		}
+	}
+	for (int i = 2; i >= 0; i--) {
+		ret+=(vec[4][i])*(1L<<(6+i*2));
+	}
+	return ret;
+}
 
 int main ()
 {
@@ -104,8 +116,8 @@ int main ()
 	data_set.insert(first_);
 	cout<<to_bin_str(data[0])<<endl;
 	cout<<to_bin_str(reverse(data[0]))<<endl;
-	for (i = 0; i < data.size(); i++) {
-		ll now=data[i];
+	for (; data.size();) {
+		ll now=data[data.size()-1];data.pop_back();
 		vector<vector<ll>> now_board(5,vector<ll>(3));
 		now_board[4][0]=(now/(1L<<6))%(1L<<2);
 		now_board[4][1]=(now/(1L<<8))%(1L<<2);
@@ -113,10 +125,11 @@ int main ()
 		for (int j = 3; j >= 0; j--) {
 			for (int k = 2; k >=0 ; k--) {
 				now_board[j][k]=((now%(1L<<((j*3L+k+1L)*4L+12L)))/(1L<<((j*3L+k)*4L+12L)));
-				cout<<to_bin_str(now_board[j][k])<<"  ";
+		//		cout<<to_bin_str(now_board[j][k])<<"  ";
 			}
-			cout<<endl;
+		//	cout<<endl;
 		}
+		//cout<<to_bin_str(vec_to_bit(now_board,now))<<endl;
 		for (int j = 0; j < 4; j++) {
 			for (int k = 0; k < 3; k++) {
 				vector<vector<vector<ll>>> now_boards(8,now_board);
@@ -133,11 +146,10 @@ int main ()
 										   if(now_board[j+1][k]==5){
 											   g[0]=1;
 										   }else{
-											   now_boards[0][4][now_board[j+1][k]-1]++;
+											   now_boards[0][4][now_board[j+1][k]==6?0:now_board[j+1][k]-7]++;
 										   }
 									   }
 									   if(j+1==3){
-										   now_boards[1]=now_board;
 										   now_boards[1][j+1][k]=7;
 										   f[1]=1;
 										   if(g[0]){
@@ -172,7 +184,7 @@ int main ()
 						   };
 					case 0:{//持ち駒を打つ
 							   for (int m = 0; m < 3; m++) {
-								   if(now_board[4][m]){
+								   if(now_boards[m][4][m]>0){
 									   if(m==0){
 										   now_boards[m][j][k]=6;
 										   f[m]=1;
@@ -195,6 +207,13 @@ int main ()
 				};
 				for (int l = 0; l < 8; l++) {
 					if(f[l]){
+						if(!g[l]){
+							ll nextll=(reverse(vec_to_bit(now_boards[l],now)));
+							if(data_set.find(nextll)==data_set.end()){
+								data_set.insert(nextll);
+								data.push_back(nextll);
+							}
+						}
 						cout<<endl;
 						for (int m = 3; m >= 0; m--) {
 							for (int n = 2; n >=0 ; n--) {
@@ -205,7 +224,9 @@ int main ()
 						for (int m = 0; m < 3; m++) {
 							cout<<now_boards[l][4][m]<<"  ";
 						}
+						cout<<endl<<data.size()<<data_set.size();
 						cout<<endl;
+
 					}
 				}	
 			}
