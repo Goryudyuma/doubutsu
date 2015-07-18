@@ -76,7 +76,7 @@ ll reverse(ll in){
 }
 
 void move(vector<vector<ll>>&original,vector<vector<ll>>&next_board,bool &f,bool &g,
-		ll nowx,ll nowy,ll nextx,ll nexty){
+		int nowx,int nowy,int nextx,int nexty){
 	if(nextx>=0&&nextx<4&&nexty>=0&&nexty<3){
 		if(original[nextx][nexty]<=5){
 			next_board[nextx][nexty]=original[nowx][nowy];
@@ -86,7 +86,7 @@ void move(vector<vector<ll>>&original,vector<vector<ll>>&next_board,bool &f,bool
 				if(original[nextx][nexty]==5){
 					g=1;
 				}else{
-					next_board[4][original[nextx][nexty]==6?0:original[nextx][nexty]-7]++;
+					next_board[4][original[nextx][nexty]<8?0:original[nextx][nexty]-7]++;
 				}
 			}
 		}
@@ -110,7 +110,6 @@ int main ()
 {
 	vector<ll>data;
 	set<ll>data_set;
-	ll i;
 	ll first_=reverse(0B010001010011000000010000000001100000100010101001000000000000);
 	data.push_back(first_);
 	data_set.insert(first_);
@@ -125,9 +124,9 @@ int main ()
 		for (int j = 3; j >= 0; j--) {
 			for (int k = 2; k >=0 ; k--) {
 				now_board[j][k]=((now%(1L<<((j*3L+k+1L)*4L+12L)))/(1L<<((j*3L+k)*4L+12L)));
-		//		cout<<to_bin_str(now_board[j][k])<<"  ";
+				//		cout<<to_bin_str(now_board[j][k])<<"  ";
 			}
-		//	cout<<endl;
+			//	cout<<endl;
 		}
 		//cout<<to_bin_str(vec_to_bit(now_board,now))<<endl;
 		for (int j = 0; j < 4; j++) {
@@ -146,10 +145,11 @@ int main ()
 										   if(now_board[j+1][k]==5){
 											   g[0]=1;
 										   }else{
-											   now_boards[0][4][now_board[j+1][k]==6?0:now_board[j+1][k]-7]++;
+											   now_boards[0][4][now_board[j+1][k]<8?0:now_board[j+1][k]-7]++;
 										   }
 									   }
 									   if(j+1==3){
+										   now_boards[1]=now_boards[0];
 										   now_boards[1][j+1][k]=7;
 										   f[1]=1;
 										   if(g[0]){
@@ -214,22 +214,23 @@ int main ()
 								data.push_back(nextll);
 							}
 						}
-						cout<<endl;
-						for (int m = 3; m >= 0; m--) {
-							for (int n = 2; n >=0 ; n--) {
-								cout<< setfill(' ')<<setw(5)<<right<<to_bin_str(now_boards[l][m][n])<<"  ";
-							}
-							cout<<endl;
-						}
-						for (int m = 0; m < 3; m++) {
-							cout<<now_boards[l][4][m]<<"  ";
-						}
-						cout<<endl<<data.size()<<data_set.size();
-						cout<<endl;
-
+						/*
+						   cout<<endl;
+						   for (int m = 3; m >= 0; m--) {
+						   for (int n = 2; n >=0 ; n--) {
+						   cout<< setfill(' ')<<setw(5)<<right<<to_bin_str(now_boards[l][m][n])<<"  ";
+						   }
+						   cout<<endl;
+						   }
+						   for (int m = 0; m < 3; m++) {
+						   cout<<now_boards[l][4][m]<<"  ";
+						   }
+						   */
 					}
 				}	
 			}
 		}
 	}
+	cout<<endl<<data.size()<<" "<<data_set.size();
+	cout<<endl;
 }
