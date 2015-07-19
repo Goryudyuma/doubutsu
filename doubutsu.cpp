@@ -108,6 +108,7 @@ ll vec_to_bit(vector<vector<ll>>vec,ll now){
 
 int main ()
 {
+	FILE* fp_out = freopen("result.txt", "w", stdout);
 	vector<ll>data;
 	set<ll>data_set;
 	ll first_=reverse(0B010001010011000000010000000001100000100010101001000000000000);
@@ -117,6 +118,7 @@ int main ()
 	cout<<to_bin_str(reverse(data[0]))<<endl;
 	for (; data.size();) {
 		ll now=data[data.size()-1];data.pop_back();
+		cout<<now<<endl;
 		vector<vector<ll>> now_board(5,vector<ll>(3));
 		now_board[4][0]=(now/(1L<<6))%(1L<<2);
 		now_board[4][1]=(now/(1L<<8))%(1L<<2);
@@ -233,4 +235,6 @@ int main ()
 	}
 	cout<<endl<<data.size()<<" "<<data_set.size();
 	cout<<endl;
+	fclose(fp_out);
+	return 0;
 }
