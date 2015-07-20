@@ -89,6 +89,9 @@ void move(vector<vector<ll>>&original,vector<vector<ll>>&next_board,bool &f,bool
 					next_board[4][original[nextx][nexty]<8?0:original[nextx][nexty]-7]++;
 				}
 			}
+			if(next_board[nextx][nexty]==10){
+				g=1;
+			}
 		}
 	}
 }
